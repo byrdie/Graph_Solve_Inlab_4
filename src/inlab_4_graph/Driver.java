@@ -26,7 +26,7 @@ public class Driver {
         Graph network;
 
         network = new Graph(size);
-        network.connectNodes(adjacency);
+        network.connectNodes(weightedAdjacency);
 
         System.out.println("Depth-First Search");
         network.depthFirst(network.getFirst());

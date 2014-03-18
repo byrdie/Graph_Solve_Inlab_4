@@ -9,15 +9,16 @@ package inlab_4_graph;
  *
  * @author roy.smart
  */
-public class Node {
-    final private Node[] connections;
+public class Node implements Comparable<Node>{
+    final private Edge[] connections;
+    final public int minDistance = -1;
     final private char item;
     private boolean visited = false;    // check if the node has already been searched
     private boolean identified = false;
     
     Node(char a, int s){
         item = a;
-        connections = new Node[s];
+        connections = new Edge[s];
     }
     
     public char getItem(){         
@@ -42,11 +43,21 @@ public class Node {
         identified = true;
     }
     
-    public void setConnection(Node node, int i){
-        connections[i] = node;
+    public void setConnection(Node node, int weight, int i){
+        connections[i] = new Edge(node, weight);
     }
     
-    public Node getConnection(int i){
-        return connections[i];
+    public Node getNode(int i){
+        if(connections[i] == null){
+            return null;
+        }
+        else{
+            return connections[i].target;
+        }
+    }
+    
+    @Override
+    public int compareTo(Node other){
+        return Integer.compare(minDistance, other.minDistance);
     }
 }

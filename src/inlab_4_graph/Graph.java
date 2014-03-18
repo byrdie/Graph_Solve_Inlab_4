@@ -10,7 +10,7 @@ package inlab_4_graph;
  *
  * @author byrdie
  */
-public class Graph {
+public class Graph{
     private final Node[] graph;
     private int size;
     private Node[] queue;
@@ -33,11 +33,11 @@ public class Graph {
         }
     }
     
-    public void connectNodes(int[][] reach){
+    public void connectNodes(int[][] adjacent){
         for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
-                if(reach[i][j] == 1){
-                    graph[i].setConnection(graph[j], j);
+                if(adjacent[i][j] >= 1){
+                    graph[i].setConnection(graph[j], adjacent[i][j], j);
                 }
             }
         }
@@ -56,7 +56,7 @@ public class Graph {
         else{
             currentNode.setVisited();  //set node as being visited
             for(int j = 0; j < size; j++){
-                Node nextConnection = currentNode.getConnection(j);
+                Node nextConnection = currentNode.getNode(j);
                 if(nextConnection != null && nextConnection.visited() ){   //make sure the node hasn't been visited
                     continue;
                 }
@@ -77,7 +77,7 @@ public class Graph {
             Node u = queue[start];
             start++;
             for(int i = 0; i < size; i++){
-                Node v = u.getConnection(i);
+                Node v = u.getNode(i);
                 if(v != null && !v.identified() && !v.visited()){
                     v.setIdentified();
                     queue[end] = v;
