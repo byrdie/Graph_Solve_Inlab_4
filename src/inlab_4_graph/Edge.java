@@ -7,10 +7,12 @@ package inlab_4_graph;
  */
 public class Edge {
     public Node target;
+    public Node source;
     public int weight;
     
-    public Edge(Node node, int distance){
-        target = node;
+    public Edge(Node destination, int distance, Node start){
+        target = destination;
+        source = start;
         weight = distance;
     }
 }

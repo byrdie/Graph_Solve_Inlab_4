@@ -16,6 +16,7 @@ import java.util.Scanner;
 public class Driver {
     static int size = 5;
     static int maxPath = 9;
+    static Random generator = new Random();
     
     public static void main(String[] args) {
         int[][] adjacency = new int[size][size];
@@ -28,13 +29,20 @@ public class Driver {
         network = new Graph(size);
         network.connectNodes(weightedAdjacency);
 
-        System.out.println("Depth-First Search");
-        network.depthFirst(network.getFirst());
-        network.resetGraph();
-        System.out.println();
-
-        System.out.println("Breadth-First Search");
-        network.breadthFirst();
+//        System.out.println("Depth-First Search");
+//        network.depthFirst(network.getFirst());
+//        network.resetGraph();
+//        System.out.println();
+//
+//        System.out.println("Breadth-First Search");
+//        network.breadthFirst();
+        
+        System.out.println("Dijkestra's shortest path");
+        int start = generator.nextInt(size);
+        System.out.println("Start Node " + (char)(start + 65));
+        int end = generator.nextInt(size - 1);
+        System.out.println("End Node " + (char)(end + 65));
+        network.Dijkstra(start, end);
 
     }
 
@@ -92,7 +100,7 @@ public class Driver {
     }
     
     public static int[][] randomWeightedMatrix(int[][] adjacency){
-        Random generator = new Random();
+        
         int[][]weighted = new int[size][size];
         
         System.out.println("Weighted Adjacency Matrix");

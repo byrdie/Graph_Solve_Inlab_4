@@ -10,8 +10,9 @@ package inlab_4_graph;
  * @author roy.smart
  */
 public class Node implements Comparable<Node>{
-    final private Edge[] connections;
-    final public int minDistance = -1;
+    final int infinity = 1000000;
+    final public Edge[] connections;
+    public int d = infinity;
     final private char item;
     private boolean visited = false;    // check if the node has already been searched
     private boolean identified = false;
@@ -44,7 +45,7 @@ public class Node implements Comparable<Node>{
     }
     
     public void setConnection(Node node, int weight, int i){
-        connections[i] = new Edge(node, weight);
+        connections[i] = new Edge(node, weight, this);
     }
     
     public Node getNode(int i){
@@ -56,8 +57,9 @@ public class Node implements Comparable<Node>{
         }
     }
     
-    @Override
+
     public int compareTo(Node other){
-        return Integer.compare(minDistance, other.minDistance);
+        return d - other.d;
+   
     }
 }
