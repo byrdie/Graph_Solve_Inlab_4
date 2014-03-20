@@ -38,9 +38,9 @@ public class Driver {
 //        network.breadthFirst();
         
         System.out.println("Dijkestra's shortest path");
-        int start = generator.nextInt(size);
+        int start = 0;
         System.out.println("Start Node " + (char)(start + 65));
-        int end = generator.nextInt(size - 1);
+        int end = size - 1;
         System.out.println("End Node " + (char)(end + 65));
         network.Dijkstra(start, end);
 
@@ -50,7 +50,7 @@ public class Driver {
         int[][] adjacency = new int[1][1];
         
         try {
-            String path = "E:\\Users\\byrdie\\Documents\\NetBeansProjects\\CSCI_232\\Inlab_4_Graph\\src\\inlab_4_graph\\adjacencyMatrix.txt";
+            String path = "E:\\Users\\byrdie\\Documents\\NetBeansProjects\\Inlab_4_Graph\\src\\inlab_4_graph\\adjacencyMatrix.txt";
             Scanner scanner = new Scanner(new File(path));
             String row;
             char[] rowChar;

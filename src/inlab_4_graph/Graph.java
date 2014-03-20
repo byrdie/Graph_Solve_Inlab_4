@@ -5,14 +5,16 @@
  */
 package inlab_4_graph;
 
+import java.util.Comparator;
 import java.util.PriorityQueue;
+import static javax.swing.text.html.HTML.Tag.S;
 
 /**
  *
  * @author byrdie
  */
 public class Graph {
-    final int infinity = 1000000;
+    final int infinity = 1000;
     private final Node[] graph;
     private int size;
     private Node[] queue;
@@ -97,7 +99,20 @@ public class Graph {
     public void Dijkstra(int startNode, int endNode) {
 
         Node[] S = new Node[size];  //All vertices for which we have computed the shortest distance
-        PriorityQueue<Node> V_S = new PriorityQueue(); //Vertices waiting to be processed
+        
+        //PriorityQueue<Node> V_S = new PriorityQueue(); //Vertices waiting to be processed
+        PriorityQueue<Node> V_S = new PriorityQueue(10,
+                    new Comparator<Node>() {
+                        @Override
+                        public int compare(Node o1, Node o2) {
+                            int time1 =  o1.d;
+                            int time2 =  o2.d;
+
+                            // uses Long's built in compareTo method, so we 
+                            //don't have to worry as much about edge cases.
+                            return time1 - time2; 
+                        }
+                    });
         int S_tail = 0;
         //
         //int[] d = new int[size];    //array of shortest paths from start to d[index]
@@ -131,6 +146,7 @@ public class Graph {
         Node u = S[0];
         /*While V_S is not empty*/
         while (!V_S.isEmpty() && (int)(u.getItem() - 65) != endNode) {
+             
             u = V_S.remove();  //find smallest d and remove
             S[S_tail] = u;
             S_tail = (S_tail + 1) % size;

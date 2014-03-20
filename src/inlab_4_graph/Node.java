@@ -9,8 +9,8 @@ package inlab_4_graph;
  *
  * @author roy.smart
  */
-public class Node implements Comparable<Node>{
-    final int infinity = 1000000;
+public class Node  {
+    final int infinity = 1000;
     final public Edge[] connections;
     public int d = infinity;
     final private char item;
@@ -58,8 +58,9 @@ public class Node implements Comparable<Node>{
     }
     
 
-    public int compareTo(Node other){
-        return d - other.d;
-   
-    }
+//    @Override
+//    public int compareTo(Node first){
+//        return Integer.compare(d, first.d);
+//   
+//    }
 }
