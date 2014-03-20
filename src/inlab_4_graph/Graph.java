@@ -5,9 +5,8 @@
  */
 package inlab_4_graph;
 
-import java.util.Comparator;
+import java.util.Iterator;
 import java.util.PriorityQueue;
-import static javax.swing.text.html.HTML.Tag.S;
 
 /**
  *
@@ -23,17 +22,17 @@ public class Graph {
         size = s;
         graph = new Node[size];
         queue = new Node[size];
-        initNodes();
+        initNodes(graph);
     }
 
     public Node getFirst() {
         return graph[0];
     }
 
-    private void initNodes() {
+    private void initNodes(Node[] list) {
         for (int i = 0; i < size; i++) {
             char a = (char) (i + 65); //convert int to char
-            graph[i] = new Node(a, size);
+            list[i] = new Node(a, size);
         }
     }
 
@@ -49,7 +48,7 @@ public class Graph {
 
     public void resetGraph() {
         for (int i = 0; i < size; i++) {
-            graph[i].resetVisited();
+            graph[i].reset();
         }
     }
 
@@ -96,25 +95,24 @@ public class Graph {
         }
     }
 
-    public void Dijkstra(int startNode, int endNode) {
-
+    public void Dijkstra(int startNode) {
+        System.out.println("Dijkestra's shortest path to all nodes");
         Node[] S = new Node[size];  //All vertices for which we have computed the shortest distance
-        
-        PriorityQueue<Node> V_S = new PriorityQueue(); //Vertices waiting to be processed
-        //PriorityQueueBST<Node> V_S = new PriorityQueueBST();
-        int S_tail = 0;
-        //
-        //int[] d = new int[size];    //array of shortest paths from start to d[index]
         Node[] p = new Node[size];    //array of predecessors of v in the path s to v
+        PriorityQueue<Node> V_S = new PriorityQueue(); //Vertices waiting to be processed
 
-        S[S_tail] = graph[startNode];    //Initialize S with start vertex
-        System.out.println(S[S_tail].getItem());
+      
+        int S_tail = 0;
+        Node start = graph[startNode];
+        S[S_tail] =  start;    //Initialize S with start vertex
+        start.d = 0;
         S_tail++;
 
         /*Initialize V_S with the remaining vertices*/
         int currentNode = startNode;
-        do {
-            currentNode = (currentNode + 1) % size;
+        currentNode = (currentNode + 1) % size;
+        while (currentNode != startNode) {
+            
             Node v = graph[currentNode];
             
             /*for all v in V_S (line 2 - 6)*/
@@ -122,28 +120,25 @@ public class Graph {
             p[vIndex] = S[0];
             if (S[0].connections[vIndex] != null) {   //if there is an edge (s,v)
                 v.d = S[0].connections[vIndex].weight;
-            } else {
-                v.d = infinity;
-            }
+            } 
             V_S.add(v);
-            
-        } while (currentNode != startNode);
+            currentNode = (currentNode + 1) % size;
+        }
 
         /*Dijkestra's main loop*/
         Node u = S[0];
         /*While V_S is not empty*/
-        while (!V_S.isEmpty() && (int)(u.getItem() - 65) != endNode) {
+        while (!V_S.isEmpty()) {
              
             u = V_S.remove();  //find smallest d and remove
             S[S_tail] = u;
             S_tail = (S_tail + 1) % size;
-            System.out.println(u.getItem() + " " + u.d);
 
             /*For all v adjacent to u in V_S*/
-            int uIndex = (int) (u.getItem() - 65);
+            int uIndex = u.getIndex();
             int vIndex = uIndex;
-            do {
-                vIndex = (vIndex + 1) % size;
+            vIndex = (vIndex + 1) % size;
+            while (vIndex != uIndex){
                 Edge u_v = u.connections[vIndex];
                 if (u_v != null && vIndex != startNode) {
                     Node v = u_v.target;
@@ -152,7 +147,87 @@ public class Graph {
                         p[vIndex] = u;
                     }
                 }
-            } while (vIndex != uIndex);
+                vIndex = (vIndex + 1) % size;
+            } 
+        }
+        for(int i = 0; i < size; i++){
+            System.out.println(graph[i].getItem() + " " + graph[i].d);
+        }
+    }
+    
+    public void primm(int startNode){
+        Node[] S = new Node[size];  //vertices in the spanning tree
+        PriorityQueue<Node> V_S = new PriorityQueue();  //remaining vertices
+        Node[] p = new Node[size];  //source vertex for edge
+        
+        Node[] spanningTree = new Node[size];
+        initNodes(spanningTree);
+        
+        /*Initialize S with start vertex, s, and V_S with the remaining vertices*/
+        int S_tail = 0;
+        Node start = graph[startNode];
+        S[S_tail] =  spanningTree[start.index];    //Initialize S with start vertex
+        start.d = 0;
+        p[start.index] = spanningTree[start.index];
+        S_tail++;
+
+        /*Initialize V_S with the remaining vertices*/
+        int currentNode = startNode;
+        currentNode = (currentNode + 1) % size;
+        while (currentNode != startNode) {           
+            Node v = graph[currentNode];
+
+            /*for all v in V_S (line 2 - 6)*/
+            int vIndex = v.index;   //find index in matrix
+            p[vIndex] = S[0];
+            if (start.connections[vIndex] != null) {   //if there is an edge (s,v)
+                v.d = start.connections[vIndex].weight;
+            } 
+            V_S.add(v);
+            
+            currentNode = (currentNode + 1) % size; //increment looping index
+        }
+        /*main loop*/
+        while(!V_S.isEmpty()){
+            Node uTemp = V_S.remove();  //remove smallest d item
+            Node u = spanningTree[uTemp.index];
+            S[S_tail] = u;
+            S_tail++;
+            
+            //u.setConnection(p[u.index], uTemp.connections[p[u.index].index].weight, p[u.index].index);
+            p[u.index].setConnection(u, uTemp.connections[p[u.index].index].weight, u.index);
+            
+            Iterator<Node> V_S_iterator = V_S.iterator();
+            /*for all v in V_S*/
+            while(V_S_iterator.hasNext()){
+                Node vTemp = V_S_iterator.next();
+                Node v = spanningTree[vTemp.index];
+                Edge u_v = uTemp.connections[v.index];
+                if(u_v != null){
+                    if(u_v.weight < v.d){
+                        v.d = u_v.weight;
+                        p[v.index] = u;
+                    }
+                }
+            }
+        }
+        /*traverse tree to find distances*/
+        System.out.println("Primm's shortest path");
+        primmTraversal(S[0], 0, startNode);
+    }
+    public void primmTraversal(Node vertex, int distance, int startNode){
+        
+       
+        System.out.println(vertex.getItem() + " " + distance);
+        for(int i = 0; i < size; i++){
+            Edge edge = null;
+            if(i != vertex.index && i != startNode) {
+                 edge = vertex.connections[i];
+            }
+            if(edge != null){
+                int newDistance = distance + edge.weight;
+                primmTraversal(edge.target, newDistance, startNode);
+            }
         }
     }
 }

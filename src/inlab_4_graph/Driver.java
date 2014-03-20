@@ -23,26 +23,18 @@ public class Driver {
         int[][] weightedAdjacency = new int[size][size];
         
         adjacency = randomAdjacencyMatrix();
+        printMatrix(adjacency);
         weightedAdjacency = randomWeightedMatrix(adjacency);
-        Graph network;
+        printMatrix(weightedAdjacency);
+        Graph network = new Graph(size);
 
-        network = new Graph(size);
-        network.connectNodes(weightedAdjacency);
-
-//        System.out.println("Depth-First Search");
-//        network.depthFirst(network.getFirst());
-//        network.resetGraph();
-//        System.out.println();
-//
-//        System.out.println("Breadth-First Search");
-//        network.breadthFirst();
+        network.connectNodes(weightedAdjacency);        
         
-        System.out.println("Dijkestra's shortest path");
         int start = 0;
-        System.out.println("Start Node " + (char)(start + 65));
-        int end = size - 1;
-        System.out.println("End Node " + (char)(end + 65));
-        network.Dijkstra(start, end);
+        network.Dijkstra(start);
+        network.resetGraph();
+        
+        network.primm(start);
 
     }
 
@@ -80,26 +72,29 @@ public class Driver {
     }
 
     public static int[][] randomAdjacencyMatrix() {
+        System.out.println("Generating random adjacency matrix...");
         Random generator = new Random();
         int[][] adjacency = new int[size][size];
         
         System.out.println("Adjacency Matrix");
         for(int i = 0; i < size; i++) {
-            for(int j = 0; j < size; j++){
+            for(int j = i; j < size; j++){
                 if(i == j){
                     adjacency[i][j] = 0;
                 }
                 else{
-                    adjacency[i][j] = generator.nextInt(2);
+                    int next = generator.nextInt(2);
+                    adjacency[i][j] = next;
+                    adjacency[j][i] = next;
                 }
-                System.out.print(adjacency[i][j]);
+                
             }
-            System.out.println();
         }
         return adjacency;
     }
     
     public static int[][] randomWeightedMatrix(int[][] adjacency){
+        System.out.println("Generating random weighted adjacency matrix...");
         
         int[][]weighted = new int[size][size];
         
@@ -107,16 +102,22 @@ public class Driver {
         for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
                 if(adjacency[i][j] == 1){
-                    weighted[i][j] = generator.nextInt(maxPath) + 1;
+                    int next = generator.nextInt(maxPath) + 1;
+                    weighted[i][j] = next;
+                    weighted[j][i] = next;
                 }
-                else{
-                    weighted[i][j] = 0;
-                }
-                System.out.print(weighted[i][j]);
+            }
+        }
+        return weighted;
+    }
+    
+    public static void printMatrix(int[][] matrix){
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                System.out.print(matrix[i][j]);
             }
             System.out.println();
         }
-        return weighted;
     }
   
 }

@@ -14,12 +14,14 @@ public class Node implements Comparable<Node>  {
     final public Edge[] connections;
     public int d = infinity;
     final private char item;
+    final public int index;
     private boolean visited = false;    // check if the node has already been searched
     private boolean identified = false;
     
     Node(char a, int s){
         item = a;
         connections = new Edge[s];
+        index = (int)(item - 65);
     }
     
     public char getItem(){         
@@ -27,14 +29,20 @@ public class Node implements Comparable<Node>  {
         return item;
     }    
     
+    public int getIndex(){
+        return index;
+    }
+    
     public boolean visited(){
         return visited;     //item has been searched   
     }   
     public void setVisited(){
         visited = true;
     }   
-    public void resetVisited(){
+    public void reset(){
         visited = false;
+        identified = false;
+        d = infinity;
     }
     
     public boolean identified(){
@@ -57,7 +65,7 @@ public class Node implements Comparable<Node>  {
         }
     }
     
-
+    /*set natural order in PriorityQueue*/
     @Override
     public int compareTo(Node first){
         return Integer.compare(d, first.d);
