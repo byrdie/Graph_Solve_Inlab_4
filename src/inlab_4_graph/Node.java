@@ -9,7 +9,7 @@ package inlab_4_graph;
  *
  * @author roy.smart
  */
-public class Node  {
+public class Node implements Comparable<Node>  {
     final int infinity = 1000;
     final public Edge[] connections;
     public int d = infinity;
@@ -58,9 +58,9 @@ public class Node  {
     }
     
 
-//    @Override
-//    public int compareTo(Node first){
-//        return Integer.compare(d, first.d);
-//   
-//    }
+    @Override
+    public int compareTo(Node first){
+        return Integer.compare(d, first.d);
+   
+    }
 }

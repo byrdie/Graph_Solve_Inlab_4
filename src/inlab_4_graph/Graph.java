@@ -100,19 +100,8 @@ public class Graph {
 
         Node[] S = new Node[size];  //All vertices for which we have computed the shortest distance
         
-        //PriorityQueue<Node> V_S = new PriorityQueue(); //Vertices waiting to be processed
-        PriorityQueue<Node> V_S = new PriorityQueue(10,
-                    new Comparator<Node>() {
-                        @Override
-                        public int compare(Node o1, Node o2) {
-                            int time1 =  o1.d;
-                            int time2 =  o2.d;
-
-                            // uses Long's built in compareTo method, so we 
-                            //don't have to worry as much about edge cases.
-                            return time1 - time2; 
-                        }
-                    });
+        PriorityQueue<Node> V_S = new PriorityQueue(); //Vertices waiting to be processed
+        //PriorityQueueBST<Node> V_S = new PriorityQueueBST();
         int S_tail = 0;
         //
         //int[] d = new int[size];    //array of shortest paths from start to d[index]
@@ -127,11 +116,7 @@ public class Graph {
         do {
             currentNode = (currentNode + 1) % size;
             Node v = graph[currentNode];
-            if (v != null) {
-                V_S.add(v);
-            }
-
-
+            
             /*for all v in V_S (line 2 - 6)*/
             int vIndex = (int) (v.getItem() - 65);   //find index in matrix
             p[vIndex] = S[0];
@@ -140,6 +125,8 @@ public class Graph {
             } else {
                 v.d = infinity;
             }
+            V_S.add(v);
+            
         } while (currentNode != startNode);
 
         /*Dijkestra's main loop*/
