@@ -14,7 +14,7 @@ import java.util.Scanner;
  * @author roy.smart
  */
 public class Driver {
-    static int size = 5;
+    static int size = 6;
     static int maxPath = 9;
     static Random generator = new Random();
     
@@ -34,7 +34,9 @@ public class Driver {
         network.Dijkstra(start);
         network.resetGraph();
         
-        network.primm(start);
+        network.prim(start);
+        network.Warshall(adjacency);
+        network.floydWarshalls(weightedAdjacency);
 
     }
 
@@ -114,7 +116,7 @@ public class Driver {
     public static void printMatrix(int[][] matrix){
         for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
-                System.out.print(matrix[i][j]);
+                System.out.print(matrix[i][j] + " ");
             }
             System.out.println();
         }
