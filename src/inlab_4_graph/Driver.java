@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * To allow for graphs to be generated from a text file
+ *you must comment out the random graph generation and enable reading
  */
 package inlab_4_graph;
 
@@ -17,14 +17,32 @@ public class Driver {
     static int size = 6;
     static int maxPath = 9;
     static Random generator = new Random();
+    static String adjacencyPath = "adjacencyMatrix.txt";
+    static String weightedPath = "weightedMatrix.txt";
     
     public static void main(String[] args) {
         int[][] adjacency = new int[size][size];
         int[][] weightedAdjacency = new int[size][size];
         
-        adjacency = randomAdjacencyMatrix();
-        printMatrix(adjacency);
-        weightedAdjacency = randomWeightedMatrix(adjacency);
+        
+        /**
+         * change this section to read in a graph
+         * instead of generating a random one
+         */
+        boolean read = false;
+        if(read){
+            System.out.println("Reading matrix");
+            adjacency = readMatrix(adjacencyPath);
+            weightedAdjacency = readMatrix(weightedPath);
+        }else{
+            System.out.println("Generating random matrix");
+            adjacency = randomAdjacencyMatrix();
+            
+            weightedAdjacency = randomWeightedMatrix(adjacency);
+        }
+        System.out.println("Adjacency Matrix");
+        printMatrix(adjacency);        
+        System.out.println("Weighted Adjacency Matrix");
         printMatrix(weightedAdjacency);
         Graph network = new Graph(size);
 
@@ -40,17 +58,16 @@ public class Driver {
 
     }
 
-    public static int[][] retrieveAdjacencyMatrix() {        
+    public static int[][] readMatrix(String path) {        
         int[][] adjacency = new int[1][1];
         
         try {
-            String path = "E:\\Users\\byrdie\\Documents\\NetBeansProjects\\Inlab_4_Graph\\src\\inlab_4_graph\\adjacencyMatrix.txt";
+            
             Scanner scanner = new Scanner(new File(path));
             String row;
             char[] rowChar;
             
             
-            System.out.println("Adjacency Matrix");
             int i = 0;
             while (scanner.hasNext()) {
                 row = scanner.nextLine();
@@ -63,10 +80,8 @@ public class Driver {
                 for (int j = 0; j < size; j++) {
                     adjacency[i][j] = (int) (rowChar[j] - '0');
                 }
-                System.out.println(row);
                 i++;
-            }
-            System.out.println();            
+            }            
         } catch (FileNotFoundException e) {
             System.out.println("File Not found");
         }
@@ -74,11 +89,10 @@ public class Driver {
     }
 
     public static int[][] randomAdjacencyMatrix() {
-        System.out.println("Generating random adjacency matrix...");
+        
         Random generator = new Random();
         int[][] adjacency = new int[size][size];
         
-        System.out.println("Adjacency Matrix");
         for(int i = 0; i < size; i++) {
             for(int j = i; j < size; j++){
                 if(i == j){
@@ -96,7 +110,7 @@ public class Driver {
     }
     
     public static int[][] randomWeightedMatrix(int[][] adjacency){
-        System.out.println("Generating random weighted adjacency matrix...");
+        
         
         int[][]weighted = new int[size][size];
         
@@ -116,7 +130,7 @@ public class Driver {
     public static void printMatrix(int[][] matrix){
         for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
-                System.out.print(matrix[i][j] + " ");
+                System.out.print(matrix[i][j] + "");
             }
             System.out.println();
         }
